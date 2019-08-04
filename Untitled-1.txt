@@ -1,0 +1,7 @@
+npm init
+npm i package
+    express
+    body-parser
+    mongoose
+    bcrypt
+    jsonwebtoken
