@@ -106,6 +106,7 @@ app.get("/post/:id", (req, res) => {
 */
 app.get("/comments/:p_id", (req, res) => {
     // fetch a single post based on id from db into commentData variable
+
     res.json({ comments: commentData });
 })
 
@@ -206,8 +207,35 @@ function validateToken(token) {
     return "valid";
 }
 
+/*
+    Route: /updatepost
+    Description: update a post
+    Access: private
+*/
+app.post("/updatepost/:p_id",(req,res)=>{
+    const { token } = req.headers;
+    if (validateToken(token) !== 'valid') { res.json({msg:"Invalid Token"});return}
+    const postId = req.params.p_id;
+    Posts.findByIdAndUpdate({_id:postId},{title:req.body.title},(error,post)=>{
+        if(error) throw error;
+        res.json({msg:"post updated successfully"});
+    })
+})
 
+/*
+    Route: /deletepost
+    Description: delete a post
+    Access: private
+*/
+app.post('/deletepost/:p_id',(req,res)=>{
+    const { token } = req.headers;
+    if (validateToken(token) !== 'valid') { res.json({msg:"Invalid Token"});return}
+    Posts.findByIdAndDelete({_id:req.params.p_id},(error,post)=>{
+        if(error) throw error;
+        res.json({msg:"post deleted successfully",post});
+    })
 
+})
 app.listen(port, (req, res) => {
     console.log(`server is running at ${port}`)
 })
